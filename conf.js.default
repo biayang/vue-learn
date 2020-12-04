@@ -1,0 +1,64 @@
+let path = require('path');
+
+const auth = {
+    trans: ['admin', 'qa', 'pm'],
+    git: ['admin', 'pm'],
+};
+
+let conf = {
+    // 权限
+    auth: auth,
+    // 获取用户名
+    getUserName: () => {
+        return "sunji"; // TODO 需要具体实现 by sso
+    },
+    user: {
+        sunji: { auth: auth.admin },
+        username1: { auth: auth.online },
+        username2: { auth: auth.dev },
+    },
+    /**
+     * trans
+     */
+    // 翻译系统默认文件路径
+    saveFilePath: path.join(__dirname, 'transData/tb.json'),
+    /**
+     * git
+     */
+    // git 开发配置
+    gitDev: {
+        // git根目录
+        dir: path.join(__dirname, 'gitDataDev'),
+        // git指定目录, 默认留空
+        subDir: "",
+        // git忽略指定目录
+        igDirs: [],
+        // git 更新文件的自定义bash命令 如: 执行下载googledoc
+        downCmd: "echo 'require configure [gitDev.downCmd] in conf.js, like a bash command   ^_^'",
+        // git 更新、提交、push后执行的自定义bash命令
+        commitCmd: "echo 'require configure [gitDev.commitCmd] in conf.js, like a bash command   ^_^'",
+    },
+    // git 线上配置
+    gitProd: {
+        // git根目录
+        dir: path.join(__dirname, 'gitDataProd'),
+        // git指定目录, 默认留空
+        subDir: "",
+        // git忽略指定目录
+        igDirs: [],
+        // git 更新文件的自定义bash命令 如: 执行下载googledoc
+        downCmd: "echo 'require configure [gitProd.downCmd] in conf.js, like a bash command   ^_^'",
+        // git 更新、提交、push后执行的自定义bash命令
+        commitCmd: "echo 'require configure [gitProd.commitCmd] in conf.js, like a bash command   ^_^'",
+    },
+}
+
+// 获取权限 by 用户名
+conf.getAuth = () => {
+    if (!conf.user[conf.getUserName()]) {
+        return false;
+    }
+    return conf.user[conf.getUserName()].auth;
+}
+
+module.exports = conf
